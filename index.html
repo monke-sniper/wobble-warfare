@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wobble Warfare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Russo+One&family=Rubik:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<div id="ui">
+  <section id="scr-menu" class="screen">
+    <div class="menu">
+      <h1 class="logo"><span class="l1">WOBBLE</span><span class="l2">WARFARE</span></h1>
+      <p class="tagline">Physically questionable sci-fi battles</p>
+      <div class="menu-btns">
+        <button class="btn primary big" data-act="campaign">Campaign</button>
+        <button class="btn big" data-act="sandbox">Sandbox</button>
+        <button class="btn ghost big" data-act="howto">How to play</button>
+      </div>
+      <button class="link-btn" data-act="sound" id="btn-sound">Sound: on</button>
+    </div>
+  </section>
+
+  <section id="scr-levels" class="screen hidden">
+    <div class="panel wide">
+      <header class="panel-head">
+        <button class="btn small ghost" data-act="menu">‹ Back</button>
+        <h2>Campaign</h2>
+        <span id="star-total" class="star-total"></span>
+      </header>
+      <div id="level-grid" class="level-grid"></div>
+    </div>
+  </section>
+
+  <section id="scr-howto" class="screen hidden">
+    <div class="panel">
+      <header class="panel-head">
+        <button class="btn small ghost" data-act="menu">‹ Back</button>
+        <h2>How to play</h2>
+      </header>
+      <div class="howto">
+        <p>Spend your budget on units, drop them in the <b class="c-blue">blue zone</b>, press <b>START</b> and watch the chaos. You don't control anyone once the battle starts. Win with less money spent to earn more stars.</p>
+        <div class="keys">
+          <div><kbd>Click</kbd> / drag<span>Place the selected unit</span></div>
+          <div><kbd>Right-click</kbd><span>Remove a unit</span></div>
+          <div><kbd>1</kbd>–<kbd>9</kbd><span>Pick a unit type</span></div>
+          <div><kbd>Right-drag</kbd> <kbd>WASD</kbd><span>Pan the camera</span></div>
+          <div><kbd>Wheel</kbd><span>Zoom</span></div>
+          <div><kbd>Space</kbd><span>Start battle / pause</span></div>
+          <div><kbd>T</kbd><span>Slow motion</span></div>
+          <div><kbd>C</kbd><span>Auto-camera</span></div>
+          <div><kbd>Click unit</kbd><span>Follow it in battle</span></div>
+          <div><kbd>R</kbd><span>Reset battle</span></div>
+        </div>
+        <p class="muted">Riot shields block bullets from the front. Explosions launch everyone, friends included. Medics heal. Mechs explode.</p>
+      </div>
+    </div>
+  </section>
+
+  <div id="hud" class="hidden">
+    <div class="topbar">
+      <button class="btn small ghost" data-act="exit">‹ Menu</button>
+      <div class="title-block">
+        <div id="hud-title" class="hud-title"></div>
+        <div id="hud-sub" class="hud-sub"></div>
+      </div>
+      <div id="budget" class="budget place-only"></div>
+      <div class="army battle-only">
+        <b id="army0" class="c-blue">0</b>
+        <div class="army-bar"><i id="army-fill"></i></div>
+        <b id="army1" class="c-red">0</b>
+      </div>
+      <div class="spacer"></div>
+      <div class="tools place-only">
+        <div id="team-switch" class="seg sandbox-only">
+          <button data-team="0" class="on">Blue</button><button data-team="1">Red</button>
+        </div>
+        <button class="btn small ghost sandbox-only" data-act="random">Random armies</button>
+        <button class="btn small ghost sandbox-only" data-act="newmap">New map</button>
+        <button class="btn small ghost" data-act="clear">Clear</button>
+        <button class="btn start" data-act="start">START ▶</button>
+      </div>
+      <div class="tools battle-only">
+        <button class="btn small ghost" id="btn-pause" data-act="pause">Pause</button>
+        <button class="btn small ghost" id="btn-slow" data-act="slow">Slow-mo</button>
+        <button class="btn small ghost" id="btn-cine" data-act="cine">Auto-cam</button>
+        <button class="btn small" data-act="reset">↺ Reset</button>
+      </div>
+    </div>
+    <div id="unit-info" class="unit-info hidden"></div>
+    <div id="palette" class="palette place-only"></div>
+    <div class="zoom-btns">
+      <button data-act="zoomin" aria-label="Zoom in">+</button>
+      <button data-act="zoomout" aria-label="Zoom out">−</button>
+      <button data-act="fit" aria-label="Fit view">⤢</button>
+    </div>
+    <div id="hint" class="hint"></div>
+  </div>
+
+  <section id="scr-results" class="screen hidden">
+    <div class="panel result">
+      <h2 id="res-title">VICTORY</h2>
+      <div id="res-stars" class="stars"></div>
+      <div id="res-stats" class="res-stats"></div>
+      <div class="res-btns">
+        <button class="btn ghost" data-act="leave" id="res-leave">Levels</button>
+        <button class="btn" data-act="retry" id="res-retry">Retry</button>
+        <button class="btn primary" data-act="next" id="res-next">Next level ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="toast" class="toast"></div>
+</div>
+
+<script src="js/core.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/terrain.js"></script>
+<script src="js/physics.js"></script>
+<script src="js/fx.js"></script>
+<script src="js/ragdoll.js"></script>
+<script src="js/weapons.js"></script>
+<script src="js/units.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/camera.js"></script>
+<script src="js/levels.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
